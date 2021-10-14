@@ -8,14 +8,11 @@ import android.view.ViewGroup
 import androidx.hilt.navigation.fragment.hiltNavGraphViewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.findNavController
-import com.assignment.sachikogaming.MainActivity
-import com.assignment.sachikogaming.utils.NetWorkConnectionCallback
-import com.assignment.sachikogaming.utils.NetworkConnections
 import com.assignment.sachikogaming.utils.NetworkUtil
 import com.assignment.sachikogaming.viewmodel.PostViewModel
+import com.google.android.material.snackbar.Snackbar
 import com.rusty.sachikogaming.R
 import com.rusty.sachikogaming.databinding.FragmentSplashBinding
-import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
@@ -36,10 +33,35 @@ class SplashFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         lifecycleScope.launch {
-            delay(2000)
-            requireActivity().runOnUiThread {
-                requireView().findNavController().navigate(SplashFragmentDirections.actionSplashFragmentToHomeFragment())
+            requestPostData()
+        }
+        splashBinding.btnRetry.setOnClickListener {
+            showHideViews(View.VISIBLE,View.GONE)
+            requestPostData()
+        }
+    }
+
+    private fun requestPostData() {
+        if (NetworkUtil.checkNetworkConnection()) {
+            getResponseAndPerformNavigation()
+        }else{
+            showHideViews(View.GONE,View.VISIBLE)
+        }
+    }
+
+    private fun getResponseAndPerformNavigation(){
+        postVM.getAllPostResponse{
+            if(it){
+                requireActivity().runOnUiThread {
+                    requireView().findNavController().navigate(SplashFragmentDirections.actionSplashFragmentToHomeFragment())
+                }
+            }else{
+                showHideViews(View.GONE,View.VISIBLE)
             }
         }
+    }
+    private fun showHideViews(pbVisibility : Int,retryBtnVisibility : Int){
+        splashBinding.progressBar.visibility = pbVisibility
+        splashBinding.retryBtnHolder.visibility = retryBtnVisibility
     }
 }
