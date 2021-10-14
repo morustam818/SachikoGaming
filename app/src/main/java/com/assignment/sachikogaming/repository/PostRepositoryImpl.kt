@@ -7,6 +7,6 @@ import javax.inject.Inject
 
 class PostRepositoryImpl @Inject constructor(
     private val apiService: ApiService
-) : ApiService {
-    override suspend fun getAllImages(): Response<PostResponse> = apiService.getAllImages()
+) : PostRepository {
+    override suspend fun getPostResponse(): Response<PostResponse> = apiService.getAllImages()
 }

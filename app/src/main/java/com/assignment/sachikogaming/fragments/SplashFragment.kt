@@ -69,7 +69,9 @@ class SplashFragment : Fragment() {
         }
     }
     private fun showHideViews(pbVisibility : Int,retryBtnVisibility : Int){
-        splashBinding.progressBar.visibility = pbVisibility
-        splashBinding.retryBtnHolder.visibility = retryBtnVisibility
+        requireActivity().runOnUiThread {
+            splashBinding.progressBar.visibility = pbVisibility
+            splashBinding.retryBtnHolder.visibility = retryBtnVisibility
+        }
     }
 }

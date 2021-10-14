@@ -23,11 +23,15 @@ class PostViewModel @Inject constructor(
     var selectedPost = MutableLiveData<PostResponseItem>()
 
     fun getAllPostResponse(onResult : (Boolean)-> Unit) = viewModelScope.launch(Dispatchers.IO){
-        val response = postRepositoryImpl.getAllImages()
-        if (response.isSuccessful){
-            postList = response.body()
-            onResult(true)
-        }else if (!response.isSuccessful){
+        try {
+            val response = postRepositoryImpl.getPostResponse()
+            if (response.isSuccessful){
+                postList = response.body()
+                onResult(true)
+            }else if (!response.isSuccessful){
+                onResult(false)
+            }
+        }catch (e:Exception){
             onResult(false)
         }
     }
