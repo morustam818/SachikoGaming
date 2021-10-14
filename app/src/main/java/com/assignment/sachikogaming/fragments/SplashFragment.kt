@@ -7,6 +7,7 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.hilt.navigation.fragment.hiltNavGraphViewModels
 import androidx.lifecycle.lifecycleScope
+import androidx.navigation.NavOptions
 import androidx.navigation.findNavController
 import com.assignment.sachikogaming.utils.NetworkUtil
 import com.assignment.sachikogaming.viewmodel.PostViewModel
@@ -53,7 +54,14 @@ class SplashFragment : Fragment() {
         postVM.getAllPostResponse{
             if(it){
                 requireActivity().runOnUiThread {
-                    requireView().findNavController().navigate(SplashFragmentDirections.actionSplashFragmentToHomeFragment())
+                    requireView().findNavController().navigate(
+                        SplashFragmentDirections.actionSplashFragmentToHomeFragment(),
+                        NavOptions.Builder()
+                            .setPopUpTo(
+                                R.id.splashFragment,
+                                true
+                            ).build()
+                    )
                 }
             }else{
                 showHideViews(View.GONE,View.VISIBLE)
